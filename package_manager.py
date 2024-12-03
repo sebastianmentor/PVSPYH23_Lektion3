@@ -3,12 +3,13 @@ import random
 EMOJI = {"empty":"⬜",
          "package":"📦",
          "charger":"🔌",
-         "dock":"📮"}
+         "dock":"📮",
+         "robot":"🤖"}
 
-# 🔌 📦 󠀠󠀠󠀠⬜ 📮
+# 🔌 📦 󠀠󠀠󠀠⬜ 📮 🤖
 
 class Environment:
-    def __init__(self, grid_size=10):
+    def __init__(self, grid_size=5):
         self.grid_size = grid_size
         self.grid = [[random.choice(["empty", "package"]) 
                       for _ in range(grid_size)] for _ in range(grid_size)]
@@ -61,17 +62,18 @@ class Environment:
         if random.random() < 0.2:  # 20% chans att batteriet går från "hög" till "låg"
             self.robot_battery = "låg"
 
-    # def print_grid(self):
-    #     for row in self.grid:
-    #         for col in row:
-    #             print(f"{col:<9}", end="")
-    #         print()
 
     def print_grid(self):
-        for row in self.grid:
-            for col in row:
-                print(EMOJI[col], end="")
+        x, y = self.robot_position
+        for i, row in enumerate(self.grid):
+            for j, col in enumerate(row):
+                if (i,j) == (x,y):
+                    print(EMOJI["robot"], end="")
+                else:
+                    print(EMOJI[col], end="")
             print()
+        
+        
 
     def __str__(self):
         self.print_grid()
@@ -110,7 +112,7 @@ agent = ReflexAgent()
 print("*"*20)
 step = 1
 while True:
-    input("Run 50") 
+    input("Run 50 steps") 
     for i in range(50):
         percept = environment.get_percept()
         action = agent.decide_action(percept)
