@@ -1,12 +1,16 @@
 import random
 
 class Environment:
-    def __init__(self, grid_size=5):
+    def __init__(self, grid_size=4):
         self.grid_size = grid_size
-        self.grid = [[random.choice(["empty", "package", "dock", "charger"]) 
+        self.grid = [[random.choice(["empty", "package"]) 
                       for _ in range(grid_size)] for _ in range(grid_size)]
+        
+        self.grid[0][0] = "charger"
+        self.grid[-1][-1] = "dock"
+
         self.robot_position = (random.randint(0, grid_size-1), random.randint(0, grid_size-1))
-        self.robot_battery = "hög"
+        self.robot_battery = "high"
         self.robot_has_package = False
 
     def get_percept(self):
@@ -29,7 +33,7 @@ class Environment:
                 self.robot_has_package = False
         elif action == "charge":
             if self.grid[x][y] == "charger":
-                self.robot_battery = "hög"
+                self.robot_battery = "high"
         elif action in ["up", "down", "left", "right"]:
             if action == "up" and x > 0:
                 self.robot_position = (x-1, y)
@@ -44,8 +48,24 @@ class Environment:
         if random.random() < 0.2:  # 20% chans att batteriet går från "hög" till "låg"
             self.robot_battery = "låg"
 
+    def print_grid(self):
+        for row in self.grid:
+            for col in row:
+                print(f"{col:<9}", end="")
+            print()
+
     def __str__(self):
         grid_view = ""
         for i, row in enumerate(self.grid):
             grid_view += " ".join(row) + "\n"
         return f"Rutnät:\n{grid_view}Robotens position: {self.robot_position}, Batteri: {self.robot_battery}, Har paket: {self.robot_has_package}"
+    
+
+
+# Reflexagent
+class ReflexAgent:
+    def decide_action(self, percept):
+        ...
+
+env = Environment()
+env.print_grid()
